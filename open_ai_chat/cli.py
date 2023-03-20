@@ -10,7 +10,12 @@ from open_ai_chat.message import MessageList
 from open_ai_chat.token import Tokenizer
 
 
-def chat(role_separator: Optional[str] = "$", msg_separator: Optional[str] = "$$", dry: bool = False):
+def chat(
+    role_separator: Optional[str] = "$",
+    msg_separator: Optional[str] = "$$",
+    dry: bool = False,
+    bulk: bool = False,
+):
     """
     Create a new chat.
     Receive messages from stdin in the following format:
@@ -27,11 +32,13 @@ def chat(role_separator: Optional[str] = "$", msg_separator: Optional[str] = "$$
     '$' is `role_seprator`, '$$' is `msg_separator`.
 
     If `dry`, no API calls, print the actual messages and number of tokens you plan to send.
+    If `bulk`, no streaming.
     """
     messages = MessageList.from_src(sys.stdin, msg_separator, role_separator)
     if not dry:
-        for delta in Chat().chat(messages):
+        for delta in Chat().chat(messages, not bulk):
             print(delta.content, end="", flush=True)
+        print()
         return
 
     print("request messages:")

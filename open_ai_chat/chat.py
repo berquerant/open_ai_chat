@@ -14,18 +14,21 @@ class Delta:
 
 
 class Chat:
-    """Streaming chat client."""
+    """Chat client."""
 
     def __init__(self, model: str = "gpt-3.5-turbo"):
         self.model = model
 
-    def chat(self, messages: MessageList) -> Iterator[Delta]:
+    def chat(self, messages: MessageList, stream: bool = True) -> Iterator[Delta]:
         """Create a new chat."""
         response = ChatCompletion.create(
             model=self.model,
             messages=messages.into_request(),
-            stream=True,
+            stream=stream,
         )
+        if not stream:
+            yield Delta(content=response["choices"][0]["message"]["content"])
+            return
         for chunk in response:
             delta = chunk["choices"][0]["delta"]
             if not delta:

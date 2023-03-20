@@ -41,13 +41,18 @@ class MessageList(list[Message]):
     @classmethod
     def from_str(cls, seq: Sequence[str], sep: Optional[str] = "$") -> "MessageList":
         """Parse string.
-        Format: ROLE{sep}CONTENT
+        Format:
+          ROLE{sep}CONTENT
+        or
+          CONTENT
         """
 
         def parse(x: str) -> Any:
-            role, content = x.split(sep, maxsplit=1)
-            if not content:
-                raise Exception(f"content required: {x}")
+            if sep not in x:
+                role = "user"
+                content = x
+            else:
+                role, content = x.split(sep, maxsplit=1)
             return {
                 "role": role,
                 "content": "\\n".join(content.splitlines()),
