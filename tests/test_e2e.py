@@ -22,7 +22,7 @@ def run(cmd: str | list[str], dir: Path, *args, **kwargs) -> subprocess.Complete
 def test_e2e():
     pwd = Path.cwd()
     run(["pipenv", "run", "dist"], pwd)
-    run(["pip", "install", "dist/open_ai_chat-0.1.0.tar.gz"], pwd)
+    run(["pip", "install", "dist/open_ai_chat-0.1.1.tar.gz"], pwd)
 
     msg = r"system$You are ELIZA.$$user$I have a headache."
     r = run(["python", "-m", "open_ai_chat.cli", "chat", "--dry"], pwd, input=msg, text=True, capture_output=True)
