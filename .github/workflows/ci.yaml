@@ -26,4 +26,4 @@ jobs:
       - name: Sync
         run: pipenv sync --dev
       - name: Test
-        run: make test
+        run: pipenv run ci
