@@ -1,5 +1,5 @@
 from collections.abc import Sequence
-from typing import Any, Optional, TextIO
+from typing import Any, TextIO
 
 from pydantic import BaseModel, validator
 
@@ -39,7 +39,7 @@ class MessageList(list[Message]):
         return MessageList([Message.parse_obj(x) for x in seq])
 
     @classmethod
-    def from_str(cls, seq: Sequence[str], sep: Optional[str] = "$") -> "MessageList":
+    def from_str(cls, seq: Sequence[str], sep: str = "$") -> "MessageList":
         """Parse string.
         Format:
           ROLE{sep}CONTENT
@@ -64,8 +64,8 @@ class MessageList(list[Message]):
     def from_src(
         cls,
         src: TextIO,
-        sep: Optional[str] = "$$",
-        role_sep: Optional[str] = "$",
+        sep: str = "$$",
+        role_sep: str = "$",
     ) -> "MessageList":
         """Parse source like sys.stdin, StringIO.
         :sep: seprator of message

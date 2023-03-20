@@ -1,7 +1,6 @@
 """Entry point of CLI."""
 import json
 import sys
-from typing import Optional
 
 from pkommand import Parser, Wrapper
 
@@ -11,8 +10,8 @@ from open_ai_chat.token import Tokenizer
 
 
 def chat(
-    role_separator: Optional[str] = "$",
-    msg_separator: Optional[str] = "$$",
+    role_separator: str = "$",
+    msg_separator: str = "$$",
     dry: bool = False,
     bulk: bool = False,
 ):
