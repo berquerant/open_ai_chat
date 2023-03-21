@@ -10,10 +10,12 @@ from open_ai_chat.token import Tokenizer
 
 
 def chat(
-    role_separator: str = "$",
-    msg_separator: str = "$$",
+    role_sep: str = "$",
+    chat_sep: str = "$$",
     dry: bool = False,
     bulk: bool = False,
+    temperature: float = 1,
+    max_tokens: int = 1024,
 ):
     """
     Create a new chat.
@@ -27,15 +29,16 @@ def chat(
     ROLE$CONTENT
 
     The line breaks immediately following the '$$' is ignored.
-
-    '$' is `role_seprator`, '$$' is `msg_separator`.
-
-    If `dry`, no API calls, print the actual messages and number of tokens you plan to send.
+    '$' is `role_sep`, '$$' is `chat_sep`.
+    If `dry`, no API calls, print the actual messages and number of tokens you plan to send
     If `bulk`, no streaming.
+    Default `temperature` is 1.
+    Default `max_tokens` is 1024.
     """
-    messages = MessageList.from_src(sys.stdin, msg_separator, role_separator)
+    messages = MessageList.from_src(sys.stdin, chat_sep, role_sep)
+    params = {"temperature": temperature, "max_tokens": max_tokens}
     if not dry:
-        for delta in Chat().chat(messages, not bulk):
+        for delta in Chat().chat(messages=messages, stream=not bulk, **params):
             print(delta.content, end="", flush=True)
         print()
         return
